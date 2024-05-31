@@ -1,0 +1,525 @@
+Alias:
+[PREFIX]
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX aeko: <http://www.AEKO.com#>
+[SELECT]
+SELECT 
+    ?Werkzeug
+    ?Maschine
+    ?Spannmittel 
+    ?Maßtoleranz
+    ?Aspektverhaeltnis
+    ?Oberflaechenrauheit 
+    ?Konturradius
+    ?Werkstueckguete
+[WorkholdingAndMachine]
+   ?workholding aeko:befindetSichIn ?machine .  
+   ?workholding aeko:MaxSpannBreite ?maxSpannBreite .  
+   ?workholding aeko:MinSpannBreite ?minSpannBreite .  
+   ?machine aeko:Verfahrweg_x ?verfahrwegX .
+   ?machine aeko:Verfahrweg_y ?verfahrwegY .
+   ?machine aeko:Verfahrweg_z ?verfahrwegZ .
+   ?machine aeko:AnzahlAchsen ?anzahlAchsen .
+   FILTER (?minSpannBreite <minSBreite) # für „minSBreite“ den Zahlenwert der kleinsten Breite zur Sicherung des Werkstücks einsetzen
+   FILTER (?maxSpannBreite >maxSBreite) # für „maxSBreite“ den Zahlenwert der größten Breite zur Sicherung des Werkstücks einsetzen
+   FILTER (?verfahrwegX >vX) # für „vX“ den Zahlenwert der Länge des Geometrieelements in X-Richtung einsetzen
+   FILTER (?verfahrwegY >vY) # für „vY“ den Zahlenwert der Länge des Geometrieelements in Y-Richtung einsetzen
+   FILTER (?verfahrwegZ >vZ) # für „vZ“ den Zahlenwert der Länge des Geometrieelements in Z-Richtung einsetzen
+   FILTER (?anzahlAchsen >= AAchsen) # für „AAchsen“ den Zahlenwert der Anzahl an Achsen der Werkzeugmaschine zur Fertigung des Geometrieelements einsetzten
+[Evaluation]
+OPTIONAL{ 
+    ?machine rdf:type ?machineType .
+    ?machineType rdfs:subClassOf ?machineRestriction .
+    ?machineRestriction owl:onProperty aeko:hatMerkmal .
+    ?machineRestriction owl:someValuesFrom aeko:3_Achs_Fraesmaschine_FeM . # für „FEM“ den Wert „Prozessstabilitaet“ oder „Bearbeitungszeit“ einsetzen
+    ?stabilityFeature rdf:type aeko:3_Achs_Fraesmaschine_FeM . # für „FEM“ den Wert „Prozessstabilitaet“ oder „Bearbeitungszeit“ einsetzen
+    OPTIONAL {
+        ?stabilityFeature aeko:MaT ?rawMaßtoleranz .
+        BIND(REPLACE(STR(?rawMaßtoleranz), "e0", "") AS ?Maßtoleranz)   }
+    OPTIONAL {
+        ?stabilityFeature aeko:ASH ?rawAspektverhaeltnis .
+        BIND(REPLACE(STR(?rawAspektverhaeltnis), "e0", "") AS ?Aspektverhaeltnis)    }
+    OPTIONAL {
+        ?stabilityFeature aeko:OfR ?rawOberflaechenrauheit .
+        BIND(REPLACE(STR(?rawOberflaechenrauheit), "e0", "") AS ?Oberflaechenrauheit)    }
+    OPTIONAL {
+        ?stabilityFeature aeko:KoR ?rawKonturradius .
+        BIND(REPLACE(STR(?rawKonturradius), "e0", "") AS ?Konturradius)   }
+    OPTIONAL {
+        ?stabilityFeature aeko:WsH ?rawWerkstueckguete .
+        BIND(REPLACE(STR(?rawWerkstueckguete), "e0", "") AS ?Werkstueckguete)   }}
+OPTIONAL{ 
+    ?machine rdf:type ?machineType .
+    ?machineType rdfs:subClassOf ?machineRestriction .
+    ?machineRestriction owl:onProperty aeko:hatMerkmal .
+    ?machineRestriction owl:someValuesFrom aeko:5_Achs_Fraesmaschine_FeM .
+    ?stabilityFeature rdf:type aeko:5_Achs_Fraesmaschine_FeM .
+        OPTIONAL {
+        ?stabilityFeature aeko:MaT ?rawMaßtoleranz .
+        BIND(REPLACE(STR(?rawMaßtoleranz), "e0", "") AS ?Maßtoleranz)}
+    OPTIONAL {
+        ?stabilityFeature aeko:ASH ?rawAspektverhaeltnis .
+        BIND(REPLACE(STR(?rawAspektverhaeltnis), "e0", "") AS ?Aspektverhaeltnis)}
+    OPTIONAL {
+        ?stabilityFeature aeko:OfR ?rawOberflaechenrauheit .
+        BIND(REPLACE(STR(?rawOberflaechenrauheit), "e0", "") AS ?Oberflaechenrauheit)}
+    OPTIONAL {
+        ?stabilityFeature aeko:KoR ?rawKonturradius .
+        BIND(REPLACE(STR(?rawKonturradius), "e0", "") AS ?Konturradius)   }
+    OPTIONAL {
+        ?stabilityFeature aeko:WsH ?rawWerkstueckguete .
+        BIND(REPLACE(STR(?rawWerkstueckguete), "e0", "") AS ?Werkstueckguete) }}
+OPTIONAL{ 
+    ?machine rdf:type ?machineType .
+    ?machineType rdfs:subClassOf ?machineRestriction .
+    ?machineRestriction owl:onProperty aeko:hatMerkmal .
+    ?machineRestriction owl:someValuesFrom aeko:Senkerodieranlage_FeM .
+    ?stabilityFeature rdf:type aeko:Senkerodieranlage_FeM .
+  OPTIONAL {
+        ?stabilityFeature aeko:MaT?rawMaßtoleranz .
+        BIND(REPLACE(STR(?rawMaßtoleranz), "e0", "") AS ?Maßtoleranz) }
+    OPTIONAL {
+        ?stabilityFeature aeko:ASH ?rawAspektverhaeltnis .
+        BIND(REPLACE(STR(?rawAspektverhaeltnis), "e0", "") AS ?Aspektverhaeltnis)}
+    OPTIONAL {
+        ?stabilityFeature aeko:OfR ?rawOberflaechenrauheit .
+        BIND(REPLACE(STR(?rawOberflaechenrauheit), "e0", "") AS ?Oberflaechenrauheit) }
+    OPTIONAL {
+        ?stabilityFeature aeko:KoR ?rawKonturradius .
+        BIND(REPLACE(STR(?rawKonturradius), "e0", "") AS ?Konturradius) }
+    OPTIONAL {
+        ?stabilityFeature aeko:WsH ?rawWerkstueckguete .
+        BIND(REPLACE(STR(?rawWerkstueckguete), "e0", "") AS ?Werkstueckguete)}}
+OPTIONAL{ 
+    ?machine rdf:type ?machineType .
+    ?machineType rdfs:subClassOf ?machineRestriction .
+    ?machineRestriction owl:onProperty aeko:hatMerkmal .
+    ?machineRestriction owl:someValuesFrom aeko:Schneiderodieranlage_FeM .
+    ?stabilityFeature rdf:type aeko:Schneiderodieranlage_FeM .
+    OPTIONAL {
+        ?stabilityFeature aeko:MaT ?rawMaßtoleranz .
+        BIND(REPLACE(STR(?rawMaßtoleranz), "e0", "") AS ?Maßtoleranz) }
+    OPTIONAL {
+        ?stabilityFeature aeko:ASH ?rawAspektverhaeltnis .
+        BIND(REPLACE(STR(?rawAspektverhaeltnis), "e0", "") AS ?Aspektverhaeltnis)   }
+    OPTIONAL {
+        ?stabilityFeature aeko:OfR ?rawOberflaechenrauheit .
+        BIND(REPLACE(STR(?rawOberflaechenrauheit), "e0", "") AS ?Oberflaechenrauheit) }
+    OPTIONAL {
+        ?stabilityFeature aeko:KoR ?rawKonturradius .
+        BIND(REPLACE(STR(?rawKonturradius), "e0", "") AS ?Konturradius)}
+    OPTIONAL {
+        ?stabilityFeature aeko:WsH ?rawWerkstueckguete .
+        BIND(REPLACE(STR(?rawWerkstueckguete), "e0", "") AS ?Werkstueckguete)}}
+# für „MaT“, „ASH“, „OfR“, „KoR“, „WsH“, die Werte aus A.4. Tabelle (Mitte) einsetzen
+[BIND]
+    BIND(REPLACE(STR(?tool), "http://www.AEKO.com#", "") AS ?Werkzeug) # Die Funktion entfernt "http://www.AEKO.com#" aus der URI und speichert das Ergebnis in "?Werkzeug"
+    BIND(REPLACE(STR(?machine), "http://www.AEKO.com#", "") AS ?Maschine) # Die Funktion entfernt "http://www.AEKO.com#" aus der URI und speichert das Ergebnis in "?Maschine"
+    BIND(REPLACE(STR(?workholding), "http://www.AEKO.com#", "") AS ?Spannmittel) # Die Funktion entfernt "http://www.AEKO.com#" aus der URI und speichert das Ergebnis in "?Spannmittel"
+1.	I_Sack_Loch 
+[PREFIX]
+[SELECT]
+   (IF(EXISTS { 
+        ?subClass rdfs:subClassOf* aeko:Vollfraeswerkzeug_Zerspanwerkzeug .
+        ?tool rdf:type ?subClass 
+    }, (3.141592653589793 * (0.5*sDurchmesser*0.5*sDurchmesser)*GeTiefe) / (?SchneidenDurchmesser*TiefeAP*vGeschw), 0) AS ?ZeitFraesen) 
+    (IF(EXISTS { 
+        ?subClass rdfs:subClassOf* aeko:Bohrwerkzeug_Zerpanwerkzeug .
+        ?tool rdf:type ?subClass 
+    }, (3.141592653589793*(0.5*sDurchmesser*0.5*sDurchmesser)*GeTiefe) / (3.141592653589793*(0.5*?BohrDurchmesser*0.5*?BohrDurchmesser)*vUmdreh*DrehZ), 0) AS ?ZeitBohren) 
+    (IF(EXISTS { 
+        ?subClass rdfs:subClassOf* aeko:Elektrode .
+        ?tool rdf:type ?subClass 
+    }, (3.141592653589793 * (0.5*sDurchmesser*0.5*sDurchmesser) *GeTiefe) / ArS, 0) AS ?ZeitSenkerodieren)
+# „sDurchmesser“=Lochdurchmesser [mm], „GeTiefe“=Lochtiefe [mm], „TiefeAP“=Schnitttiefe ap [mm], „vGeschw“=Vorschubgeschwindigkeit, „vUmdreh“=Vorschub pro Umdrehung [mm/U], „DrehZ“=Drehzahl [U/mm], „ArS“=Abtragrate[mm^3/min]
+WHERE {
+   ?tool rdf:type ?toolType .
+   ?toolType rdfs:subClassOf ?restriction .
+   ?restriction owl:onProperty aeko:fertigt ;
+               owl:someValuesFrom aeko:I_Sack_Loch .
+   ?workholding rdf:type ?workholdingType .
+   ?workholdingType rdfs:subClassOf ?restrictionW .
+   ?restrictionW owl:onProperty aeko:fixiert ;
+                owl:someValuesFrom aeko:AGGelement_Grundkoerper . # für „AGG“ den Wert „Quader“ oder „Zylinder“ einsetzen
+   ?tool aeko:wirdVerwendetVon ?machine .    
+{    {   { ?tool aeko:SchneidenDurchmesser_Dc ?schneidenDurchmesser }
+        {?tool aeko:Schneidenlaenge_Lc ?schneidenLaenge } 
+        FILTER (?schneidenDurchmesser <= sDurchmesser) # für „sDurchmesser“ den Zahlenwert des Lochdurchmessers einsetzen
+        FILTER(!BOUND(?schneidenLaenge) || sLaenge = 0 || (?schneidenLaenge <= sLaenge)) # für „sLaenge“ den Zahlenwert für Fraeserlaenge einsetzten  }
+    UNION {
+        ?tool aeko:BohrDurchmesser_Dc ?bohrDurchmesser .
+        ?tool aeko:Schneidenlaenge_Lc ?schneidenLaenge .
+        FILTER (?bohrDurchmesser = sDurchmesser) # für „sDurchmesser“ den Zahlenwert des Lochdurchmessers einsetzen
+        FILTER(!BOUND(?schneidenLaenge) || bLaenge = 0 || (?schneidenLaenge <= bLaenge)) # für „bLaenge“ den Zahlenwert für Bohrerlaenge einsetzten   }
+     UNION {
+        ?tool aeko:SenkDurchmesser ?senkDurchmesser .
+        ?tool aeko:SenkTiefe ?senkTiefe .
+        FILTER (?senkDurchmesser <= sDurchmesser) # für „sDurchmesser“ den Zahlenwert des Lochdurchmessers einsetzen
+        FILTER(!BOUND(?senkTiefe) || senkELaenge = 0 || (?senkTiefe <= senkELaenge)) # für „senkELaenge“ den Zahlenwert für Elektrodenlaenge einsetzten    }
+    OPTIONAL { ?tool aeko:EckfasenBreite ?eckfasenBreite }
+    OPTIONAL { ?tool aeko:EckfasenWinkel ?eckfasenWinkel }
+    OPTIONAL { ?tool aeko:EckenRadius ?eckenRadius }
+    BIND (IF(bound(?eckfasenBreite), ?eckfasenBreite, -1) AS ?safeEckfasenBreite)
+    BIND (IF(bound(?eckfasenWinkel), ?eckfasenWinkel, -1) AS ?safeEckfasenWinkel)
+    FILTER (
+        (?safeEckfasenBreite = EfB && ?safeEckfasenWinkel = EfW) || # für „EfB“ den Zahlenwert der Eckfasenbreite und „EfW“ den Zahlenwert der Eckfasenwinkel einsetzten (falls vorhanden, sonst 0 einsetzten)
+        (?eckenRadius = EnS) # für „EnS“ den Zahlenwert der Eckenradius einsetzen (falls vorhanden, sonst 0 einsetzten)    )
+    ?tool aeko:Kraglaenge ?kragLaenge .
+    ?tool aeko:Prozess ?prozess .
+    FILTER (?kragLaenge >=StL) # für „StL“ den Zahlenwert der Stoerkontur einsetzen
+    FILTER (?prozess = "PSS") # für „PSS“ den Wert „Schrupp“ oder „Schlicht“ einsetzen}
+  [WorkholdingAndMachine]
+OPTIONAL { ?tool aeko:SchneidenDurchmesser_Dc ?SchneidenDurchmesser }
+OPTIONAL { ?tool aeko:BohrDurchmesser_Dc ?BohrDurchmesser }  
+[Evaluation]
+[BIND]}
+2.	I_Durchgang_Loch 
+[PREFIX]
+[SELECT]
+   (IF(EXISTS { 
+        ?subClass rdfs:subClassOf* aeko:Vollfraeswerkzeug_Zerspanwerkzeug .
+        ?tool rdf:type ?subClass 
+    }, (3.141592653589793 * (0.5*sDurchmesser*0.5*sDurchmesser)*GeTiefe) / (?SchneidenDurchmesser*TiefeAP*vGeschw), 0) AS ?ZeitFraesen) 
+    (IF(EXISTS { 
+        ?subClass rdfs:subClassOf* aeko:Bohrwerkzeug_Zerpanwerkzeug .
+        ?tool rdf:type ?subClass 
+ }, (3.141592653589793*(0.5*sDurchmesser*0.5*sDurchmesser)*GeTiefe) / (3.141592653589793*(0.5*?BohrDurchmesser*0.5*?BohrDurchmesser)*vUmdreh*DrehZ), 0) AS ?ZeitBohren) 
+    (IF(EXISTS { 
+        ?subClass rdfs:subClassOf* aeko:Elektrode .
+        ?tool rdf:type ?subClass 
+    }, (3.141592653589793 * (0.5*sDurchmesser*0.5*sDurchmesser) *GeTiefe) / ArS, 0) AS ?ZeitSenkerodieren)
+    (IF(EXISTS { 
+        ?subClass rdfs:subClassOf* aeko:Draht .
+        ?tool rdf:type ?subClass 
+    }, (3.141592653589793*GeTiefe*sDurchmesser) / ArD, 0) AS ?ZeitDrahterodieren)
+# „sDurchmesser“=Lochdurchmesser [mm], „GeTiefe“=Lochtiefe [mm], „TiefeAP“=Schnitttiefe ap [mm], „vGeschw“=Vorschubgeschwindigkeit, „vUmdreh“=Vorschub pro Umdrehung [mm/U], „DrehZ“=Drehzahl [U/mm], „ArS“=Abtragrate[mm^3/min], „ArD“=Abtragrate[mm^2/min]
+WHERE {
+   ?tool rdf:type ?toolType .
+   ?toolType rdfs:subClassOf ?restriction .
+   ?restriction owl:onProperty aeko:fertigt ;
+               owl:someValuesFrom aeko:I_Durchgang_Loch .
+   ?workholding rdf:type ?workholdingType .
+   ?workholdingType rdfs:subClassOf ?restrictionW .
+   ?restrictionW owl:onProperty aeko:fixiert ;
+                owl:someValuesFrom aeko:AGGelement_Grundkoerper . # für „AGG“ den Wert „Quader“ oder „Zylinder“ einsetzen
+   ?tool aeko:wirdVerwendetVon ?machine .{ { 
+         { ?tool aeko:DrahtDurchmesser ?drahtDurchmesser }
+        FILTER (?drahtDurchmesser <= sDurchmesser) # für „sDurchmesser“ den Zahlenwert des Lochdurchmessers einsetzen  }
+    UNION  {
+        { ?tool aeko:SchneidenDurchmesser_Dc ?schneidenDurchmesser }
+        {?tool aeko:Schneidenlaenge_Lc ?schneidenLaenge } 
+        FILTER (?schneidenDurchmesser <= sDurchmesser) # für „sDurchmesser“ den Zahlenwert des Lochdurchmessers einsetzen
+        FILTER(!BOUND(?schneidenLaenge) || sLaenge = 0 || (?schneidenLaenge <= sLaenge)) # für „sLaenge“ den Zahlenwert für Fraeserlaenge einsetzten  }
+    UNION  {
+        ?tool aeko:BohrDurchmesser_Dc ?bohrDurchmesser .
+        ?tool aeko:Schneidenlaenge_Lc ?schneidenLaenge .
+        FILTER (?bohrDurchmesser = sDurchmesser) # für „sDurchmesser“ den Zahlenwert des Lochdurchmessers einsetzen
+        FILTER(!BOUND(?schneidenLaenge) || bLaenge = 0 || (?schneidenLaenge <= bLaenge)) # für „bLaenge“ den Zahlenwert für Bohrerlaenge einsetzten    }
+     UNION  {
+        ?tool aeko:SenkDurchmesser ?senkDurchmesser .
+        ?tool aeko:SenkTiefe ?senkTiefe .
+        FILTER (?senkDurchmesser <= sDurchmesser) # für „sDurchmesser“ den Zahlenwert des Lochdurchmessers einsetzen
+        FILTER(!BOUND(?senkTiefe) || senkELaenge = 0 || (?senkTiefe <= senkELaenge)) # für „senkELaenge“ den Zahlenwert für Elektrodenlaenge einsetzten    }
+    ?tool aeko:Kraglaenge ?kragLaenge .
+    ?tool aeko:Prozess ?prozess .
+    FILTER (?kragLaenge >=StL) # für „StL“ den Zahlenwert der Stoerkontur einsetzen
+    FILTER (?prozess = "PSS") # für „PSS“ den Wert „Schrupp“ oder „Schlicht“ einsetzen}
+[WorkholdingAndMachine]
+OPTIONAL { ?tool aeko:SchneidenDurchmesser_Dc ?SchneidenDurchmesser }
+OPTIONAL { ?tool aeko:BohrDurchmesser_Dc ?BohrDurchmesser }
+[Evaluation]
+[BIND]  }
+3.	I_I_Boden_Tasche 
+[PREFIX]
+[SELECT]
+   (IF(EXISTS { 
+        ?subClass rdfs:subClassOf* aeko:Vollfraeswerkzeug_Zerspanwerkzeug .
+        ?tool rdf:type ?subClass 
+    }, ((GeBreite*GeLaenge*GeTiefe)+(3.141592653589793*(0.5*(sDurchmesser*2)*0.5*(sDurchmesser*2)))*GeTiefe) / (?SchneidenDurchmesser*TiefeAP*vGeschw), 0) AS ?ZeitFraesen) 
+    (IF(EXISTS { 
+        ?subClass rdfs:subClassOf* aeko:Elektrode .
+        ?tool rdf:type ?subClass 
+    }, ((GeBreite*GeLaenge*GeTiefe)+(3.141592653589793*(0.5*(sDurchmesser*2)*0.5*(sDurchmesser*2)))*GeTiefe) / ArS, 0) AS ?ZeitSenkerodieren)
+# „sDurchmesser“=Formradius [mm], „GeBreite“=Taschenbreite [mm],  „GeLaenge“=Taschenlaenge [mm], „GeTiefe“=Taschentiefe [mm], „TiefeAP“=Schnitttiefe ap [mm], „vGeschw“=Vorschubgeschwindigkeit, „ArS“=Abtragrate[mm^3/min]
+WHERE {
+   ?tool rdf:type ?toolType .
+   ?toolType rdfs:subClassOf ?restriction .
+   ?restriction owl:onProperty aeko:fertigt ;
+               owl:someValuesFrom aeko:I_I_Boden_Tasche .
+   ?workholding rdf:type ?workholdingType .
+   ?workholdingType rdfs:subClassOf ?restrictionW .
+   ?restrictionW owl:onProperty aeko:fixiert ;
+                owl:someValuesFrom aeko:AGGelement_Grundkoerper . # für „AGG“ den Wert „Quader“ oder „Zylinder“ einsetzen
+   ?tool aeko:wirdVerwendetVon ?machine . {  { 
+        { ?tool aeko:SchneidenDurchmesser_Dc ?schneidenDurchmesser } 
+        { ?tool aeko:Schneidenlaenge_Lc ?schneidenLaenge } 
+        FILTER (?schneidenDurchmesser <= sDurchmesser*2) # für „sDurchmesser“ den Zahlenwert des Formradius der Tasche einsetzen
+        FILTER(!BOUND(?schneidenLaenge) || sLaenge = 0 || (?schneidenLaenge <= sLaenge)) # für „sLaenge“ den Zahlenwert für Fraeserlaenge einsetzten}
+    UNION {
+        ?tool aeko:SenkDurchmesser ?senkDurchmesser .
+        ?tool aeko:SenkTiefe ?senkTiefe .
+        FILTER (?senkDurchmesser <= sDurchmesser*2) # für „sDurchmesser“ den Zahlenwert des Formradius der Tasche einsetzen
+        FILTER(!BOUND(?senkTiefe) || senkELaenge = 0 || (?senkTiefe <= senkELaenge)) # für „senkELaenge“ den Zahlenwert für Elektrodenlaenge einsetzten }
+    OPTIONAL { ?tool aeko:EckfasenBreite ?eckfasenBreite }
+    OPTIONAL { ?tool aeko:EckfasenWinkel ?eckfasenWinkel }
+    OPTIONAL { ?tool aeko:EckenRadius ?eckenRadius }
+    BIND (IF(bound(?eckfasenBreite), ?eckfasenBreite, -1) AS ?safeEckfasenBreite)
+    BIND (IF(bound(?eckfasenWinkel), ?eckfasenWinkel, -1) AS ?safeEckfasenWinkel)
+    FILTER (
+        (?safeEckfasenBreite = EfB && ?safeEckfasenWinkel = EfW) || # für „EfB“ den Zahlenwert der Eckfasenbreite und „EfW“ den Zahlenwert der Eckfasenwinkel einsetzten (falls vorhanden, sonst 0 einsetzten)
+        (?eckenRadius = EnS) # für „EnS“ den Zahlenwert der Eckenradius einsetzen (falls vorhanden, sonst 0 einsetzten) )
+    ?tool aeko:Kraglaenge ?kragLaenge .
+    ?tool aeko:Prozess ?prozess .
+    FILTER (?kragLaenge >=StL) # für „StL“ den Zahlenwert der Stoerkontur einsetzen
+    FILTER (?prozess = "PSS") # für „PSS“ den Wert „Schrupp“ oder „Schlicht“ einsetzen}
+  [WorkholdingAndMachine]
+OPTIONAL { ?tool aeko:SchneidenDurchmesser_Dc ?SchneidenDurchmesser }  
+[Evaluation]
+[BIND]}
+4.	U_I_Boden_Nut  
+[PREFIX]
+[SELECT]
+WHERE {
+   ?tool rdf:type ?toolType .
+   ?toolType rdfs:subClassOf ?restriction .
+   ?restriction owl:onProperty aeko:fertigt ;
+               owl:someValuesFrom aeko:U_I_Boden_Nut .
+   ?workholding rdf:type ?workholdingType .
+   ?workholdingType rdfs:subClassOf ?restrictionW .
+   ?restrictionW owl:onProperty aeko:fixiert ;
+                owl:someValuesFrom aeko:AGGelement_Grundkoerper . # für „AGG“ den Wert „Quader“ oder „Zylinder“ einsetzen
+   ?tool aeko:wirdVerwendetVon ?machine .    { { 
+        { ?tool aeko:SchneidenDurchmesser_Dc ?schneidenDurchmesser }
+        {?tool aeko:Schneidenlaenge_Lc ?schneidenLaenge } 
+        FILTER (?schneidenDurchmesser <= sDurchmesser) # für „sDurchmesser“ den Zahlenwert des Breite der Nut einsetzen
+        FILTER(!BOUND(?schneidenLaenge) || sLaenge = 0 || (?schneidenLaenge <= sLaenge)) # für „sLaenge“ den Zahlenwert für Fraeserlaenge einsetzten}
+     UNION {
+        ?tool aeko:SenkDurchmesser ?senkDurchmesser .
+        ?tool aeko:SenkTiefe ?senkTiefe .
+        FILTER (?senkDurchmesser <= sDurchmesser) # für „sDurchmesser“ den Zahlenwert des Breite der Nut einsetzen
+        FILTER(!BOUND(?senkTiefe) || senkELaenge = 0 || (?senkTiefe <= senkELaenge)) # für „senkELaenge“ den Zahlenwert für Elektrodenlaenge einsetzten }
+    ?tool aeko:ProfilRadius ?profilRadius .
+    ?tool aeko:Kraglaenge ?kragLaenge .
+    ?tool aeko:Prozess ?prozess .
+    FILTER (?profilRadius <=PLR) # für „PLR“ den Zahlenwert des Profilradius der Nut einsetzen
+    FILTER (?kragLaenge >=StL) # für „StL“ den Zahlenwert der Stoerkontur einsetzen
+    FILTER (?prozess = "PSS") # für „PSS“ den Wert „Schrupp“ oder „Schlicht“ einsetzen}
+[WorkholdingAndMachine]  
+[Evaluation]
+[BIND]}
+5.	U_V_Boden_Nut  
+[PREFIX]
+[SELECT]
+WHERE {
+   ?tool rdf:type ?toolType .
+   ?toolType rdfs:subClassOf ?restriction .
+   ?restriction owl:onProperty aeko:fertigt ;
+               owl:someValuesFrom aeko:U_V_Boden_Nut .
+   ?workholding rdf:type ?workholdingType .
+   ?workholdingType rdfs:subClassOf ?restrictionW .
+   ?restrictionW owl:onProperty aeko:fixiert ;
+                owl:someValuesFrom aeko:AGGelement_Grundkoerper . # für „AGG“ den Wert „Quader“ oder „Zylinder“ einsetzen
+   ?tool aeko:wirdVerwendetVon ?machine . { { 
+        { ?tool aeko:SchneidenDurchmesser_Dc ?schneidenDurchmesser } 
+        { ?tool aeko:Schneidenlaenge_Lc ?schneidenLaenge } 
+        FILTER (?schneidenDurchmesser <= sDurchmesser) # für „sDurchmesser“ den Zahlenwert des Breite der Nut einsetzen
+        FILTER(!BOUND(?schneidenLaenge) || sLaenge = 0 || (?schneidenLaenge <= sLaenge)) # für „sLaenge“ den Zahlenwert für Fraeserlaenge einsetzten }
+     UNION {
+        ?tool aeko:SenkBreite ?senkBreite .
+        ?tool aeko:SenkTiefe ?senkTiefe .
+        ?tool aeko:SenkLaenge ?senkLaenge .
+        FILTER (?senkBreite <= sDurchmesser) # für „sDurchmesser“ den Zahlenwert des Breite der Nut einsetzen
+        FILTER(?senkTiefe <= senkELaenge) # für „senkELaenge“ den Zahlenwert der Tiefe der Nut einsetzen
+        FILTER(?senkLaenge <= senkE2Laenge) # für „senkE2Laenge“ den Zahlenwert die Laenge der Nut einsetzen }
+  ?tool aeko:EckfasenWinkel ?eckfasenWinkel .
+    FILTER (?eckfasenWinkel <= EfW) # für „EfW“ den Zahlenwert des Eckfasenwinkel der Nut einsetzen  
+    ?tool aeko:ProfilRadius ?profilRadius .
+    FILTER (?profilRadius <=PLR) # für „PLR“ den Zahlenwert des Profilradius der Nut einsetzen
+    ?tool aeko:SenkFormRadius ?senkFormRadius .
+    FILTER(!BOUND(?senkFormRadius) || SFMR = 0 || (?senkFormRadius <= SFMR)) # für „SFMR“ den Zahlenwert des Formradius der Nut einsetzen
+    ?tool aeko:Kraglaenge ?kragLaenge .
+    ?tool aeko:Prozess ?prozess .
+    FILTER (?kragLaenge >=StL) # für „StL“ den Zahlenwert der Stoerkontur einsetzen
+    FILTER (?prozess = "PSS") # für „PSS“ den Wert „Schrupp“ oder „Schlicht“ einsetzen}
+[WorkholdingAndMachine]
+[Evaluation]
+[BIND]}
+6.	I_V_Quader 
+[PREFIX]
+[SELECT]
+WHERE {
+   ?tool rdf:type ?toolType .
+   ?toolType rdfs:subClassOf ?restriction .
+   ?restriction owl:onProperty aeko:fertigt ;
+               owl:someValuesFrom aeko:I_V_Quader .
+   ?workholding rdf:type ?workholdingType .
+   ?workholdingType rdfs:subClassOf ?restrictionW .
+   ?restrictionW owl:onProperty aeko:fixiert ;
+                owl:someValuesFrom aeko:AGGelement_Grundkoerper . # für „AGG“ den Wert „Quader“ oder „Zylinder“ einsetzen
+   ?tool aeko:wirdVerwendetVon ?machine . { { 
+        { ?tool aeko:SchneidenDurchmesser_Dc ?schneidenDurchmesser } 
+        { ?tool aeko:Schneidenlaenge_Lc ?schneidenLaenge } 
+        FILTER(!BOUND(?schneidenDurchmesser) || sDurchmesser = 0 || (?schneidenDurchmesser < sDurchmesser)) # für „sDurchmesser“ den Zahlenwert der Stoerkontur 2 des Quaders einsetzen
+        FILTER(!BOUND(?schneidenLaenge) || sLaenge = 0 || (?schneidenLaenge <= sLaenge)) # für „sLaenge“ den Zahlenwert für Fraeserlaenge einsetzten }
+     UNION{
+        ?tool aeko:SenkDurchmesser ?senkDurchmesser .
+        ?tool aeko:SenkTiefe ?senkTiefe .
+        FILTER(!BOUND(?senkDurchmesse) || sDurchmesser = 0 || (?senkDurchmesse < sDurchmesser)) # für „sDurchmesser“ den Zahlenwert der Stoerkontur 2 des Quaders einsetzen
+        FILTER(!BOUND(?senkTiefe) || senkELaenge = 0 || (?senkTiefe <= senkELaenge)) # für „senkELaenge“ den Zahlenwert für Elektrodenlaenge einsetzten } 
+    ?tool aeko:Kraglaenge ?kragLaenge .
+    ?tool aeko:Prozess ?prozess .
+    FILTER (?kragLaenge >=StL) # für „StL“ den Zahlenwert der Stoerkontur 1 des Quaders einsetzen
+    FILTER (?prozess = "PSS") # für „PSS“ den Wert „Schrupp“ oder „Schlicht“ einsetzen}
+[WorkholdingAndMachine]
+[Evaluation]
+[BIND]}
+7.	Umfang_Außenkonturelement
+[PREFIX]
+[SELECT]
+WHERE {
+   ?tool rdf:type ?toolType .
+   ?toolType rdfs:subClassOf ?restriction .
+   ?restriction owl:onProperty aeko:fertigt ;
+               owl:someValuesFrom aeko:Umfang_Außenkonturelement .
+   ?workholding rdf:type ?workholdingType .
+   ?workholdingType rdfs:subClassOf ?restrictionW .
+   ?restrictionW owl:onProperty aeko:fixiert ;
+                owl:someValuesFrom aeko:AGGelement_Grundkoerper . # für „AGG“ den Wert „Quader“ oder „Zylinder“ einsetzen
+   ?tool aeko:wirdVerwendetVon ?machine .   {   { 
+         { ?tool aeko:DrahtDurchmesser ?drahtDurchmesser }
+        FILTER (?drahtDurchmesser <= sDurchmesser) # für „sDurchmesser“ den Zahlenwert für den kleinsten konkaven Formradius einsetzen    }
+    UNION   { 
+        { ?tool aeko:SchneidenDurchmesser_Dc ?schneidenDurchmesser } 
+        { ?tool aeko:Schneidenlaenge_Lc ?schneidenLaenge } 
+        FILTER(!BOUND(?schneidenDurchmesser) || sDurchmesser = 0 || (?schneidenDurchmesser <= sDurchmesser)) # für „sDurchmesser“ den Zahlenwert für den kleinsten konkaven Formradius einsetzen   
+        FILTER(!BOUND(?schneidenLaenge) || sLaenge = 0 || (?schneidenLaenge <= sLaenge)) # für „sLaenge“ den Zahlenwert für Fraeserlaenge einsetzten }
+     UNION  {
+        ?tool aeko:SenkDurchmesser ?senkDurchmesser .
+        ?tool aeko:SenkTiefe ?senkTiefe . 
+        FILTER(!BOUND(?senkDurchmesse) || sDurchmesser = 0 || (?senkDurchmesse <= sDurchmesser)) # für „sDurchmesser“ den Zahlenwert für den kleinsten konkaven Formradius einsetzen   
+        FILTER(!BOUND(?senkTiefe) || senkELaenge = 0 || (?senkTiefe <= senkELaenge)) # für „senkELaenge“ den Zahlenwert für Elektrodenlaenge einsetzten    }
+    ?tool aeko:Kraglaenge ?kragLaenge .
+    ?tool aeko:Prozess ?prozess .
+    FILTER (?kragLaenge >=StL) # für „StL“ den Zahlenwert der Stoerkontur einsetzen
+    FILTER (?prozess = "PSS") # für „PSS“ den Wert „Schrupp“ oder „Schlicht“ einsetzen}
+[WorkholdingAndMachine]
+[Evaluation]
+[BIND]}
+8.	Plan_Außenkonturelement
+[PREFIX]
+[SELECT]
+WHERE {
+   ?tool rdf:type ?toolType .
+   ?toolType rdfs:subClassOf ?restriction .
+   ?restriction owl:onProperty aeko:fertigt ;
+               owl:someValuesFrom aeko:Plan_Außenkonturelement .
+   ?workholding rdf:type ?workholdingType .
+   ?workholdingType rdfs:subClassOf ?restrictionW .
+   ?restrictionW owl:onProperty aeko:fixiert ;
+                owl:someValuesFrom aeko:AGGelement_Grundkoerper . # für „AGG“ den Wert „Quader“ oder „Zylinder“ einsetzen
+   ?tool aeko:wirdVerwendetVon ?machine .{ { 
+         { ?tool aeko:DrahtDurchmesser ?drahtDurchmesser }
+        FILTER (?drahtDurchmesser <= sDurchmesser) # für „sDurchmesser“ den Zahlenwert der kleinsten Breite oder Laenge }
+    UNION   { 
+        { ?tool aeko:SchneidenDurchmesser_Dc ?schneidenDurchmesser } 
+        { ?tool aeko:Schneidenlaenge_Lc ?schneidenLaenge } 
+        FILTER(!BOUND(?schneidenDurchmesser) || sDurchmesser = 0 || (?schneidenDurchmesser <= sDurchmesser)) # für „sDurchmesser“ den Zahlenwert der kleinsten Breite oder Laenge
+        FILTER(!BOUND(?schneidenLaenge) || sLaenge = 0 || (?schneidenLaenge <= sLaenge)) # für „sLaenge“ den Zahlenwert für Fraeserlaenge einsetzten }
+     UNION{
+        ?tool aeko:SenkDurchmesser ?senkDurchmesser .
+        ?tool aeko:SenkTiefe ?senkTiefe .
+        FILTER(!BOUND(?senkDurchmesse) || sDurchmesser = 0 || (?senkDurchmesse <= sDurchmesser)) # für „sDurchmesser“ den Zahlenwert der kleinsten Breite oder Laenge
+        FILTER(!BOUND(?senkTiefe) || senkELaenge = 0 || (?senkTiefe <= senkELaenge)) # für „senkELaenge“ den Zahlenwert für Elektrodenlaenge einsetzten}
+    ?tool aeko:Kraglaenge ?kragLaenge .
+    ?tool aeko:Prozess ?prozess .
+    FILTER (?kragLaenge >=StL) # für „StL“ den Zahlenwert der Stoerkontur einsetzen
+    FILTER (?prozess = "PSS") # für „PSS“ den Wert „Schrupp“ oder „Schlicht“ einsetzen}
+[WorkholdingAndMachine]
+[Evaluation]
+[BIND]}
+9.	Übergang_Rundung_Plan_Umfang
+[PREFIX]
+[SELECT]
+WHERE {
+   ?tool rdf:type ?toolType .
+   ?toolType rdfs:subClassOf ?restriction .
+   ?restriction owl:onProperty aeko:fertigt ;
+               owl:someValuesFrom aeko:Zwischen_Außenkontur_Plan_Umfang_Rundung .
+   ?workholding rdf:type ?workholdingType .
+   ?workholdingType rdfs:subClassOf ?restrictionW .
+   ?restrictionW owl:onProperty aeko:fixiert ;
+                owl:someValuesFrom aeko:AGGelement_Grundkoerper . # für „AGG“ den Wert „Quader“ oder „Zylinder“ einsetzen
+   ?tool aeko:wirdVerwendetVon ?machine .{  { 
+         { ?tool aeko:DrahtDurchmesser ?drahtDurchmesser }
+        FILTER (?drahtDurchmesser <= sDurchmesser*2) # für „sDurchmesser“ den Zahlenwert für den kleinsten konkaven Formradius einsetzen   }
+    UNION  { 
+        { ?tool aeko:SchneidenDurchmesser_Dc ?schneidenDurchmesser } 
+        { ?tool aeko:Schneidenlaenge_Lc ?schneidenLaenge } 
+        FILTER(!BOUND(?schneidenDurchmesser) || sDurchmesser = 0 || (?schneidenDurchmesser <= sDurchmesser*2)) # für „sDurchmesser“ den Zahlenwert für den kleinsten konkaven Formradius einsetzen   
+        FILTER(!BOUND(?schneidenLaenge) || sLaenge = 0 || (?schneidenLaenge <= sLaenge)) # für „sLaenge“ den Zahlenwert für Fraeserlaenge einsetzten}
+     UNION {
+        ?tool aeko:SenkDurchmesser ?senkDurchmesser .
+        ?tool aeko:SenkTiefe ?senkTiefe .
+        FILTER(!BOUND(?senkDurchmesse) || sDurchmesser = 0 || (?senkDurchmesse <= sDurchmesser*2)) # für „sDurchmesser“ den Zahlenwert für den kleinsten konkaven Formradius einsetzen   
+        FILTER(!BOUND(?senkTiefe) || senkELaenge = 0 || (?senkTiefe <= senkELaenge)) # für „senkELaenge“ den Zahlenwert für Elektrodenlaenge einsetzten }
+    ?tool aeko:Kraglaenge ?kragLaenge .
+    ?tool aeko:Prozess ?prozess .
+    FILTER (?kragLaenge >=StL) # für „StL“ den Zahlenwert der Stoerkontur einsetzen
+    FILTER (?prozess = "PSS") # für „PSS“ den Wert „Schrupp“ oder „Schlicht“ einsetzen}
+  [WorkholdingAndMachine]
+  [Evaluation]
+[BIND]}
+10.	Prozessplan
+[PREFIX]
+SELECT 
+  (strafter(str(?schritt), "#") as ?Schritt)
+  (strafter(str(?geometrie), "#") as ?Geometrieelement)
+  (strafter(str(?prozess), "#") as ?Prozess)
+  (strafter(str(?maschine), "#") as ?Maschinen)
+  (str(COALESCE(REPLACE(str(?achskonfiguration), "^http://www.AEKO.com#", ""), "")) AS ?Achskonfiguration)
+  (str(COALESCE(REPLACE(str(?werkzeug), "^http://www.AEKO.com#", ""), "")) AS ?Werkzeuge)
+  (str(COALESCE(REPLACE(str(?spannmittel), "^http://www.AEKO.com#", ""), "")) AS ?Spannmittel1) 
+  (COALESCE(REPLACE(str(?Alternative_Fertigungsmittel_value), "^http://www.AEKO.com#", ""), "") AS ?Alternative_Fertigungsmittel)
+  (COALESCE(str(?Zeit_value), "") AS ?Zeit)
+WHERE {
+  aeko:DE_001_Demonstrator ?schritt ?geometrie . # in „aeko:“ Prozessplan einsetzen
+  ?geometrie aeko:wirdBearbeitetIn ?maschine .
+  OPTIONAL {
+    ?geometrie ?prozess ?werkzeug .
+    FILTER (?prozess IN (aeko:Schlichten_Fraesen, aeko:Schruppen_Fraesen, aeko:Schlichten_Senkerodieren)) }
+  OPTIONAL {
+    ?geometrie aeko:Achskonfiguration ?achskonfiguration . }
+  OPTIONAL {
+    ?geometrie aeko:Grundkoerper_Orientierung_1 ?spannmittel .
+    BIND(aeko:Grundkoerper_Orientierung_1 AS ?prozess) }
+  OPTIONAL {
+    ?geometrie aeko:Grundkoerper_Orientierung_2 ?spannmittel .
+    BIND(aeko:Grundkoerper_Orientierung_2 AS ?prozess) }
+  OPTIONAL {
+    ?geometrie aeko:Alternative_Fertigungsmittel ?Alternative_Fertigungsmittel_value .}
+  OPTIONAL {
+    ?geometrie aeko:Zeit ?Zeit_value .}
+  FILTER (?schritt IN (aeko:S01, aeko:S02, aeko:S03, aeko:S04, aeko:S05, aeko:S06, aeko:S07, aeko:S08, aeko:S09, aeko:S10, aeko:S11, aeko:S12, aeko:S13, aeko:S14, aeko:S15, aeko:S16, aeko:S17, aeko:S18))}
+ORDER BY ?schritt
+11.	Suche: Eigenschaft/Wert E,G,W,X-Suche 
+[PREFIX]
+SELECT ?localObjProperty ?objectValues ?localDataProperty ?dataValues 
+WHERE {
+    {
+        SELECT (strafter(str(?objectProperty), "#") AS ?localObjProperty)
+               (strafter(str(?object), "#") AS ?objectValues) 
+        WHERE { 
+            aeko:GSuche ?objectProperty ?object . # für „GSuche“ Instanz einsetzen
+            ?objectProperty rdf:type owl:ObjectProperty .
+            FILTER isIRI(?object)  }   } 
+    UNION  {
+        SELECT (strafter(str(?dataProperty), "#") AS ?localDataProperty)
+               (str(?literalValue) AS ?dataValues) 
+        WHERE { 
+            aeko:GSuche ?dataProperty ?literalValue . # für „GSuche“ Instanz einsetzen
+            ?dataProperty rdf:type owl:DatatypeProperty .
+            FILTER isLiteral(?literalValue)}  } }
+ORDER BY ?localDataProperty ?localObjProperty
